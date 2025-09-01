@@ -1,0 +1,31 @@
+const int LED_PIN = 9;
+String buf;
+
+void setup() {
+  pinMode(LED_PIN, OUTPUT);
+  analogWrite(LED_PIN, 0);
+  Serial.begin(115200);
+}
+
+void handleCmd(String s) {
+  s.trim();
+  s.toUpperCase();
+
+  if (s == "ON") {
+    analogWrite(LED_PIN, 255);
+  } else if (s == "OFF") {
+    analogWrite(LED_PIN, 0);
+  }
+}
+
+void loop() {
+  while (Serial.available()) {
+    char c = (char)Serial.read();
+    if (c == '\n') {
+      handleCmd(buf);
+      buf = "";
+    } else if (c != '\r') {
+      buf += c;
+    }
+  }
+}
